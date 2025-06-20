@@ -1,8 +1,33 @@
-import { useAuth } from '../../hooks/useAuth'
-import Link from 'next/link'
+import { useAuth } from '../../hooks/useAuth';
+import Link from 'next/link';
 
 export default function Navbar() {
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, logout } = useAuth();
+
+  // Links comunes para todos los usuarios autenticados
+  const commonLinks = [
+    { href: "/dashboardP", name: "Inicio" },
+  ];
+
+  // Links específicos por rol
+  const roleBasedLinks = {
+    paciente: [
+      { href: "/prescriptions", name: "Recetas" },
+      { href: "/appointments", name: "Mis Citas" },
+    ],
+    doctor: [
+      { href: "/prescriptions", name: "Recetas" },
+    ],
+    pharmacist : [
+      { href: "/prescriptions", name: "recetas" },
+    ],
+  };
+
+  // Obtener los links según el rol del usuario
+  const getUserLinks = () => {
+    if (!user?.role) return commonLinks;
+    return [...commonLinks, ...(roleBasedLinks[user.role] || [])];
+  };
 
   return (
     <nav className="bg-white shadow-sm">
@@ -10,24 +35,21 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link href="./" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-gray-900">
                 Consultorio Digital
               </Link>
             </div>
             {isAuthenticated && (
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <Link
-                  href="/dashboardP"
-                  className="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Inicio
-                </Link>
-                <Link
-                  href="/prescriptions"
-                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                >
-                  Recetas
-                </Link>
+                {getUserLinks().map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
               </div>
             )}
           </div>
@@ -66,5 +88,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }

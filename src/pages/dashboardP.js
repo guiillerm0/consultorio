@@ -12,7 +12,6 @@ export default function Dashboard() {
       if (!isAuthenticated) {
         router.push('/login')
       } else if (user.role !== 'patient') {
-        // Redirigir dependiendo del rol
         if (user.role === 'doctor') router.push('/doctor')
         else if (user.role === 'pharmacist') router.push('/farmaceutico')
         else router.push('/')
@@ -34,8 +33,13 @@ export default function Dashboard() {
             {/* Categorías */}
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-black">Categories</h2>
-                <button className="text-sm text-blue-600 font-medium">Show All</button>
+                <h2 className="text-lg font-semibold text-black">Categorias</h2>
+                <button
+                  className="text-sm text-blue-600 font-medium hover:underline"
+                  onClick={() => router.push('/categorias')}
+                >
+                  Show All
+                </button>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
