@@ -11,7 +11,7 @@ export default function Navbar() {
 
   // Links específicos por rol
   const roleBasedLinks = {
-    paciente: [
+    patient: [
       { href: "/prescriptions", name: "Recetas" },
       { href: "/appointments", name: "Mis Citas" },
     ],
