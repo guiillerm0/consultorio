@@ -19,16 +19,16 @@ export default function Home() {
             <div className="flex justify-center gap-4">
               {user.role === 'doctor' && (
                 <Link href="/prescriptions/create" className="btn-primary">
-                  Crear Nueva Receta
+                 
                 </Link>
               )}
               {user.role === 'pharmacist' && (
                 <Link href="/prescriptions/verify" className="btn-primary">
-                  Verificar Recetas
+                 
                 </Link>
               )}
               <Link href="/prescriptions" className="btn-primary">
-                Ver Mis Recetas
+                
               </Link>
             </div>
           </div>

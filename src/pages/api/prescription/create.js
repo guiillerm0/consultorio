@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const { doctorId, patientId, medications } = req.body;
     
     // Verificar que el usuario es un doctor
-    const doctor = await User.findById(doctorId);
+    const doctor = await User.findById(doctorId).select('+privateKey');
     if (!doctor || !checkRole(doctor, 'doctor')) {
       return res.status(403).json({ message: 'Only doctors can create prescriptions' });
     }
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     const prescriptionData = {
       patientId,
       doctorId,
-      issueDate: new Date(),
+      appointment: new Date(),
       medications
     };
     
