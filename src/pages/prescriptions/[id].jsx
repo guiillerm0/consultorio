@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import { useAuth } from '../../../hooks/useAuth'
+import { useAuth } from '../../hooks/useAuth'
 import { useEffect, useState } from 'react'
-import { verifySignature } from '../../../lib/cryptography'
+import { verifySignature } from '../../lib/cryptography'
 import Link from 'next/link'
 
 export default function PrescriptionDetail() {
