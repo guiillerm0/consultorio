@@ -104,8 +104,7 @@ export default function CreatePrescription() {
               onClick={() => handleRemoveMedication(index)}
               className="absolute top-2 right-2 text-red-500"
               disabled={medications.length <= 1}
-            >
-              ×
+            >   
             </button>
             
             <div className="grid grid-cols-2 gap-4">
