@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import { useAuth } from '../../../hooks/useAuth'
+import { useAuth } from '../../hooks/useAuth'
 import { useEffect, useState } from 'react'
-import { verifySignature } from '../../../lib/cryptography'
+import { verifySignature } from '../../lib/cryptography'
 import Link from 'next/link'
 
 export default function PrescriptionDetail() {
@@ -22,7 +22,7 @@ export default function PrescriptionDetail() {
       setError('')
       
       try {
-        const res = await fetch(`/api/prescriptions/${id}`)
+        const res = await fetch(`/api/prescription/${id}`)
         if (!res.ok) {
           throw new Error('Failed to fetch prescription')
         }
@@ -173,19 +173,19 @@ export default function PrescriptionDetail() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-xs text-gray-500">Nombre</p>
-                        <p className="text-sm font-medium">{med.name}</p>
+                        <p className="text-sm text-black font-medium">{med.name}</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500">Dosis</p>
-                        <p className="text-sm font-medium">{med.dosage}</p>
+                        <p className="text-sm text-black font-medium">{med.dosage}</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500">Frecuencia</p>
-                        <p className="text-sm font-medium">{med.frequency}</p>
+                        <p className="text-sm text-black font-medium">{med.frequency}</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500">Duración</p>
-                        <p className="text-sm font-medium">{med.duration}</p>
+                        <p className="text-sm text-black font-medium">{med.duration}</p>
                       </div>
                     </div>
                   </div>

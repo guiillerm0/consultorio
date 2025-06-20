@@ -6,13 +6,12 @@ export function usePrescriptions() {
   const [prescriptions, setPrescriptions] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
-
   const fetchPrescriptions = async () => {
     setIsLoading(true)
     setError(null)
     
     try {
-      let url = '/api/prescriptions'
+      let url = '/api/prescription/fetchPrescriptions'
       
       if (user?.role === 'patient') {
         url += '?patientId=' + user._id
@@ -42,13 +41,12 @@ export function usePrescriptions() {
       fetchPrescriptions()
     }
   }, [user])
-
   const createPrescription = async (prescriptionData) => {
     setIsLoading(true)
     setError(null)
     
     try {
-      const res = await fetch('/api/prescriptions/create', {
+      const res = await fetch('/api/prescription/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -73,13 +71,12 @@ export function usePrescriptions() {
       setIsLoading(false)
     }
   }
-
   const verifyPrescription = async (prescriptionId) => {
     setIsLoading(true)
     setError(null)
     
     try {
-      const res = await fetch('/api/prescriptions/verify', {
+      const res = await fetch('/api/prescription/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
