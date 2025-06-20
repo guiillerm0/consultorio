@@ -9,13 +9,13 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#f5f8ff]">
       <main className="container mx-auto py-12 px-4">
-        <h1 className="text-4xl font-bold text-center mb-8">Sistema de Recetas Médicas Digitales</h1>
+        <h1 className="text-4xl font-bold text-center mb-8 text-black">Sistema de Recetas Médicas Digitales</h1>
         
         {isAuthenticated ? (
           <div className="text-center">
-            <h2 className="text-2xl mb-4">Bienvenido, {user.name}</h2>
+            <h2 className="text-2xl mb-4 text-black">Bienvenido, {user.name}</h2>
             <div className="flex justify-center gap-4">
               {user.role === 'doctor' && (
                 <Link href="/prescriptions/create" className="btn-primary">

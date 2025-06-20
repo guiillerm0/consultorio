@@ -13,17 +13,17 @@ export default function PrescriptionList() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#f5f8ff]">
       <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold text-black">
             {user.role === 'doctor' ? 'Mis Recetas Emitidas' : 
              user.role === 'pharmacist' ? 'Recetas Pendientes' : 'Mis Recetas'}
           </h1>
           {user.role === 'doctor' && (
             <Link
               href="/prescriptions/create"
-              className="btn-primary"
+              className="btn-primary text-black"
             >
               Crear Nueva Receta
             </Link>
