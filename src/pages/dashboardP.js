@@ -43,9 +43,9 @@ export default function Dashboard() {
                   { label: 'Consultation', icon: '/icons/consulta.png' },
                   { label: 'Dentist', icon: '/icons/dentista.png' },
                   { label: 'Cardiologist', icon: '/icons/corazon.png' },
-                  { label: 'Hospital', icon: '/icons/hospital..png' },
+                  { label: 'Hospital', icon: '/icons/hospital.png' },
                   { label: 'Emergency', icon: '/icons/ambulancia.png' },
-                  { label: 'Laboratory', icon: '/icons/clinical.png' },
+                  { label: 'Laboratory', icon: '/icons/clinico.png' },
                 ].map((item) => (
                   <div
                     key={item.label}
