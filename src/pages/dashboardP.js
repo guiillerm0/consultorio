@@ -1,6 +1,4 @@
 import { useAuth } from '../hooks/useAuth'
-import Navbar from '../components/ui/Navbar'
-import Sidebar from '../components/ui/Sidebar'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import Image from 'next/image'
@@ -14,7 +12,6 @@ export default function Dashboard() {
       if (!isAuthenticated) {
         router.push('/login')
       } else if (user.role !== 'patient') {
-        // Redirigir dependiendo del rol
         if (user.role === 'doctor') router.push('/doctor')
         else if (user.role === 'pharmacist') router.push('/farmaceutico')
         else router.push('/')
@@ -28,18 +25,21 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#f5f8ff]">
-      <Navbar />
       <div className="flex">
-        <Sidebar />
         <main className="flex-1 p-10">
-          <h1 className="text-2xl font-semibold mb-8">Bienvenido, {user.name}</h1>
+          <h1 className="text-2xl font-semibold mb-8 text-black">Bienvenido, {user.name}</h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             {/* Categorías */}
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Categories</h2>
-                <button className="text-sm text-blue-600 font-medium">Show All</button>
+                <h2 className="text-lg font-semibold text-black">Categorias</h2>
+                <button
+                  className="text-sm text-blue-600 font-medium hover:underline"
+                  onClick={() => router.push('/categorias')}
+                >
+                  Show All
+                </button>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
@@ -47,9 +47,9 @@ export default function Dashboard() {
                   { label: 'Consultation', icon: '/icons/consulta.png' },
                   { label: 'Dentist', icon: '/icons/dentista.png' },
                   { label: 'Cardiologist', icon: '/icons/corazon.png' },
-                  { label: 'Hospital', icon: '/icons/hospital..png' },
+                  { label: 'Hospital', icon: '/icons/hospital.png' },
                   { label: 'Emergency', icon: '/icons/ambulancia.png' },
-                  { label: 'Laboratory', icon: '/icons/clinical.png' },
+                  { label: 'Laboratory', icon: '/icons/clinico.png' },
                 ].map((item) => (
                   <div
                     key={item.label}
@@ -64,7 +64,7 @@ export default function Dashboard() {
 
             {/* Top Doctors */}
             <div>
-              <h2 className="text-lg font-semibold mb-4">Top doctors</h2>
+              <h2 className="text-lg font-semibold mb-4 text-black">Top doctors</h2>
               <div className="space-y-4">
                 {[
                   {
