@@ -1,6 +1,4 @@
 import { useAuth } from '../hooks/useAuth'
-import Navbar from '../components/ui/Navbar'
-import Sidebar from '../components/ui/Sidebar'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import Image from 'next/image'
@@ -28,17 +26,15 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#f5f8ff]">
-      <Navbar />
       <div className="flex">
-        <Sidebar />
         <main className="flex-1 p-10">
-          <h1 className="text-2xl font-semibold mb-8">Bienvenido, {user.name}</h1>
+          <h1 className="text-2xl font-semibold mb-8 text-black">Bienvenido, {user.name}</h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             {/* Categorías */}
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Categories</h2>
+                <h2 className="text-lg font-semibold text-black">Categories</h2>
                 <button className="text-sm text-blue-600 font-medium">Show All</button>
               </div>
 
@@ -64,7 +60,7 @@ export default function Dashboard() {
 
             {/* Top Doctors */}
             <div>
-              <h2 className="text-lg font-semibold mb-4">Top doctors</h2>
+              <h2 className="text-lg font-semibold mb-4 text-black">Top doctors</h2>
               <div className="space-y-4">
                 {[
                   {
