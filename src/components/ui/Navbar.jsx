@@ -13,7 +13,7 @@ export default function Navbar() {
   const roleBasedLinks = {
     patient: [
       { href: "/prescriptions", name: "Recetas" },
-      { href: "/appointments", name: "Mis Citas" },
+      { href: "/dates", name: "Mis Citas" },
     ],
     doctor: [
       { href: "/prescriptions", name: "Recetas" },
