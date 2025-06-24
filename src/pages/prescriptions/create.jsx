@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 export default function CreatePrescriptionPage() {
   const router = useRouter();
+  const { patientId, patientName, patientEmail: queryPatientEmail } = router.query;
   const { user } = useAuth();
   const [patientEmail, setPatientEmail] = useState('');
   const [patientData, setPatientData] = useState(null);
@@ -14,13 +15,32 @@ export default function CreatePrescriptionPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [searchingPatient, setSearchingPatient] = useState(false);
-  // Verificar que el usuario sea un doctor
+  const [searchingPatient, setSearchingPatient] = useState(false);  // Verificar que el usuario sea un doctor
   useEffect(() => {
     if (user && user.role !== 'doctor') {
       router.push('/dashboard');
     }
   }, [user, router]);
+
+  // Cargar datos del paciente desde parámetros de consulta
+  useEffect(() => {
+    if (router.isReady && patientId && queryPatientEmail) {
+      setPatientEmail(queryPatientEmail);
+      
+      // Si tenemos todos los datos del paciente desde la consulta, creamos el objeto de paciente
+      if (patientId && patientName && queryPatientEmail) {
+        setPatientData({
+          _id: patientId,
+          name: patientName,
+          email: queryPatientEmail,
+          role: 'patient'
+        });
+      } else {
+        // Si sólo tenemos el email, realizamos la búsqueda
+        searchPatient(queryPatientEmail);
+      }
+    }
+  }, [router.isReady, patientId, patientName, queryPatientEmail]);
 
   // Debug del AuthContext
   useEffect(() => {
@@ -284,15 +304,20 @@ export default function CreatePrescriptionPage() {
                   {searchingPatient && (
                     <p className="text-sm text-gray-500 mt-1">Searching for patient...</p>
                   )}
-                </div>
-
-                {/* Patient Data Display */}
+                </div>                {/* Patient Data Display */}
                 {patientData && (
                   <div className="p-3 bg-green-50 border border-green-200 rounded-md">
                     <p className="text-sm font-medium text-green-800">
                       ✓ Patient Found: {patientData.name}
                     </p>
                     <p className="text-sm text-green-600">Email: {patientData.email}</p>
+                    {patientId && patientName && queryPatientEmail && (
+                      <p className="mt-1 text-xs text-blue-700">
+                        <span className="bg-blue-100 px-2 py-0.5 rounded">
+                          Paciente seleccionado desde cita
+                        </span>
+                      </p>
+                    )}
                   </div>
                 )}
               </div>

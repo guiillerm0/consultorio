@@ -19,11 +19,6 @@ export default async function handler(req, res) {
                 filter.doctorId = doctorId;
             }
 
-            // Filtrar por estado (para farmacéuticos - recetas pendientes)
-            if (status === 'pending') {
-                filter.isFilled = false;
-            }
-
             // Buscar recetas con población de datos relacionados
             const prescriptions = await Prescription.find(filter)
                 .populate('patientId', 'name email')
