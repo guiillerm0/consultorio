@@ -58,7 +58,7 @@ export default function Navbar() {
               <div className="ml-3 relative">
                 <div className="flex items-center space-x-4">
                   <span className="text-gray-500 text-sm">
-                    {user?.name} ({user?.role})
+                    {user?.name} 
                   </span>
                   <button
                     onClick={logout}
@@ -70,18 +70,7 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex space-x-4">
-                <Link
-                  href="/login"
-                  className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
-                >
-                  Iniciar sesión
-                </Link>
-                <Link
-                  href="/register"
-                  className="px-3 py-1 border border-gray-300 text-gray-700 rounded-md text-sm hover:bg-gray-50"
-                >
-                  Registrarse
-                </Link>
+                
               </div>
             )}
           </div>

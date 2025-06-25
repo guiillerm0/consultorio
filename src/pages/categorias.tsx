@@ -22,26 +22,32 @@ const especialidades = [
 export default function CategoriasPage() {
   const router = useRouter()
 
+  const handleCategoriaClick = (especialidad: string) => {
+    router.push(`/dates/create?especialidad=${encodeURIComponent(especialidad)}`)
+  }
+
   return (
-    <div className="min-h-screen bg-[#f5f8ff] p-10">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 p-10">
       <button
         onClick={() => router.back()}
-        className="text-blue-600 hover:underline mb-6 text-sm"
+        className="text-indigo-600 hover:underline mb-6 text-sm"
       >
-        
+        &larr; Volver
       </button>
 
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Especialidades del Hospital</h1>
+      <h1 className="text-2xl font-bold mb-6 text-indigo-700 drop-shadow-sm">Especialidades del Hospital</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {especialidades.map((item) => (
-          <div
+          <button
             key={item.label}
-            className="bg-white p-6 rounded-lg shadow hover:shadow-md transition flex flex-col items-center text-center"
+            onClick={() => handleCategoriaClick(item.label)}
+            className="bg-white/80 p-6 rounded-xl shadow hover:shadow-lg transition flex flex-col items-center text-center focus:outline-none focus:ring-2 focus:ring-indigo-300 group cursor-pointer border border-transparent hover:border-indigo-200"
+            style={{ minHeight: 160 }}
           >
-            <Image src={item.icon} alt={item.label} width={50} height={50} />
-            <h3 className="mt-4 text-md font-medium text-gray-700">{item.label}</h3>
-          </div>
+            <Image src={item.icon} alt={item.label} width={50} height={50} className="group-hover:scale-110 transition-transform" />
+            <h3 className="mt-4 text-md font-semibold text-gray-700 group-hover:text-indigo-600 transition-colors">{item.label}</h3>
+          </button>
         ))}
       </div>
     </div>
