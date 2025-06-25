@@ -53,7 +53,8 @@ export default function Dashboard() {
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="bg-white p-4 rounded-lg shadow flex flex-col items-center hover:shadow-md transition"
+                    className="bg-white p-4 rounded-lg shadow flex flex-col items-center hover:shadow-md transition cursor-pointer"
+                    onClick={() => router.push('/dates/create')}
                   >
                     <Image src={item.icon} alt={item.label} width={40} height={40} />
                     <span className="mt-2 text-sm text-gray-700 text-center">{item.label}</span>
