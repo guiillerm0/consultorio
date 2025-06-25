@@ -24,32 +24,7 @@ export default function Home() {
               Bienvenido {' '}
               <span className="text-black">{user.name}</span>
             </h2>
-            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-2">
-              {user.role === 'doctor' && (
-                <Link
-                  href="/prescriptions/create"
-                  className="btn-primary min-w-[180px]"
-                >
-                  <span className="inline-block align-middle">Crear Receta</span>
-                </Link>
-              )}
-              {user.role === 'pharmacist' && (
-                <Link
-                  href="/prescriptions/verify"
-                  className="btn-primary min-w-[180px]"
-                >
-                  <span className="inline-block align-middle">
-                    Verificar Receta
-                  </span>
-                </Link>
-              )}
-              <Link
-                href="/prescriptions"
-                className="btn-primary min-w-[180px]"
-              >
-              </Link>
-            </div>
-          </div>
+             </div>
         ) : (
           <div className="text-center">
             <h2 className="text-xl sm:text-2xl mb-8 text-gray-700 font-medium">

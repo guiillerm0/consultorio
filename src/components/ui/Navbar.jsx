@@ -6,20 +6,21 @@ export default function Navbar() {
 
   // Links comunes para todos los usuarios autenticados
   const commonLinks = [
-    { href: "/dashboardP", name: "Inicio" },
   ];
 
   // Links específicos por rol
   const roleBasedLinks = {
     patient: [
+          { href: "/dashboardP", name: "Inicio" },
       { href: "/prescriptions", name: "Recetas" },
       { href: "/dates", name: "Mis Citas" },
     ],
     doctor: [
+          { href: "/dashboardP", name: "Inicio" },
       { href: "/prescriptions", name: "Recetas" },
     ],
     pharmacist : [
-      { href: "/prescriptions", name: "recetas" },
+      { href: "/prescriptions", name: "Recetas" },
     ],
   };
 
