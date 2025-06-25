@@ -192,12 +192,9 @@ export default function CreatePrescriptionPage() {
     );
   }
 
-  return (    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-10">
+  return (    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-10">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Debug Component */}
-        {/* <UserDebugInfo user={user} /> */}
-        
-        {/* Header */}
+      
         <div className="mb-10">
           <div className="flex items-center justify-between">
             <h1 className="text-4xl font-extrabold text-blue-900 drop-shadow-sm">Crear nueva receta</h1>

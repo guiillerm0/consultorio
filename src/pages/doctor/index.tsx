@@ -91,7 +91,7 @@ export default function DoctorDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
    
       <div className="flex">
         <main className="flex-1 p-10">

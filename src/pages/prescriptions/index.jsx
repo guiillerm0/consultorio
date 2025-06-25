@@ -13,7 +13,7 @@ export default function PrescriptionList() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       <div className="max-w-5xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-extrabold text-blue-900 drop-shadow-sm">

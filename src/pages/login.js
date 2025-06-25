@@ -23,7 +23,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12 px-4">
       <div className="w-full max-w-md bg-white/80 rounded-2xl shadow-xl p-8">
         <div>
           <h2 className="text-center text-3xl font-extrabold text-indigo-700 mb-2 drop-shadow-sm">

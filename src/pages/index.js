@@ -13,7 +13,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex flex-col justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex flex-col justify-center items-center">
       <main className="w-full max-w-xl bg-white/80 rounded-2xl shadow-xl p-8 mt-12 mb-12">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-center mb-6 text-indigo-700 tracking-tight drop-shadow-md">
           Sistema de Recetas Médicas Digitales

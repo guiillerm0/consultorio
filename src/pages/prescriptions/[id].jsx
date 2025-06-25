@@ -91,7 +91,7 @@ export default function PrescriptionDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="bg-white/90 shadow-2xl overflow-hidden rounded-2xl border border-blue-100">
           <div className="px-6 py-6 border-b border-blue-100 flex justify-between items-center">
