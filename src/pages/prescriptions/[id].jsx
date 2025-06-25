@@ -206,7 +206,7 @@ export default function PrescriptionDetail() {
               <button
                 onClick={async () => {
                   try {
-                    const res = await fetch('/api/prescriptions/verify', {
+                    const res = await fetch('/api/prescription/verify', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
