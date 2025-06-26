@@ -42,22 +42,6 @@ export default function CreatePrescriptionPage() {
     }
   }, [router.isReady, patientId, patientName, queryPatientEmail]);
 
-  // Debug del AuthContext
-  useEffect(() => {
-    console.log('=== AUTH CONTEXT DEBUG ===');
-    console.log('User object:', user);
-    console.log('User type:', typeof user);
-    console.log('User keys:', user ? Object.keys(user) : 'user is null/undefined');
-    console.log('User role:', user?.role);
-    console.log('User _id:', user?._id);
-    console.log('User name:', user?.name);
-    console.log('User email:', user?.email);
-    console.log('User privateKey exists:', !!user?.privateKey);
-    console.log('User privateKey length:', user?.privateKey?.length);
-    console.log('User privateKey first 20 chars:', user?.privateKey?.substring(0, 20));
-    console.log('=========================');
-  }, [user]);
-
   // Buscar paciente por email
   const searchPatient = async (email) => {
     if (!email) {
@@ -139,18 +123,7 @@ export default function CreatePrescriptionPage() {
   // Enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Debug antes de enviar el formulario
-    console.log('=== FORM SUBMISSION DEBUG ===');
-    console.log('user object:', user);
-    console.log('user._id:', user?._id);
-    console.log('user.privateKey exists:', !!user?.privateKey);
-    console.log('user.privateKey value:', user?.privateKey);
-    console.log('patientData:', patientData);
-    console.log('patientData._id:', patientData?._id);
-    console.log('medications:', medications);
-    console.log('============================');
-    
+  
     if (!patientData) {
       setError('Please select a valid patient');
       return;
@@ -210,37 +183,7 @@ export default function CreatePrescriptionPage() {
     }
   };
 
-  // Componente temporal para debugging
-  const UserDebugInfo = ({ user }) => {
-    if (!user) return (
-      <div className="p-4 bg-red-100 border border-red-300 rounded mb-4">
-        <h3 className="font-bold text-red-800">DEBUG: No user data</h3>
-      </div>
-    );
-    
-    return (
-      <div className="p-4 text-black bg-yellow-100 border border-yellow-300 rounded mb-4">
-        <h3 className="font-bold text-yellow-800 mb-2">DEBUG: User Information</h3>
-        <div className="text-sm space-y-1">
-          <p><strong>Name:</strong> {user.name || 'N/A'}</p>
-          <p><strong>Email:</strong> {user.email || 'N/A'}</p>
-          <p><strong>Role:</strong> {user.role || 'N/A'}</p>
-          <p><strong>ID:</strong> {user._id || 'N/A'}</p>
-          <p><strong>Private Key exists:</strong> {user.privateKey ? 'YES' : 'NO'}</p>
-          <p><strong>Private Key length:</strong> {user.privateKey?.length || 'N/A'}</p>
-          <p><strong>Specialty:</strong> {user.specialty || 'N/A'}</p>
-          <p><strong>Clinic:</strong> {user.clinic || 'N/A'}</p>
-        </div>
-        <details className="mt-2">
-          <summary className="cursor-pointer font-medium">View full user object</summary>
-          <pre className="text-xs overflow-x-auto mt-2 p-2 bg-gray-100 rounded">
-            {JSON.stringify(user, null, 2)}
-          </pre>
-        </details>
-      </div>
-    );
-  }
-
+ 
   if (!user || user.role !== 'doctor') {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -249,68 +192,69 @@ export default function CreatePrescriptionPage() {
     );
   }
 
-  return (    <div className="min-h-screen bg-gray-50 py-8">
+  return (    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-10">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Debug Component */}
-        <UserDebugInfo user={user} />
-        
-        {/* Header */}
-        <div className="mb-8">
+      
+        <div className="mb-10">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">Create New Prescription</h1>
+            <h1 className="text-4xl font-extrabold text-blue-900 drop-shadow-sm">Crear nueva receta</h1>
             <Link 
               href="/prescriptions"
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 text-blue-700 hover:text-white border border-blue-300 rounded-md hover:bg-blue-600 transition-colors font-semibold shadow-sm"
             >
-              Back to Prescriptions
+              ← Volver a recetas
             </Link>
           </div>
-          <p className="text-gray-600 mt-2">Fill out the form below to create a new prescription for your patient</p>
+          <p className="text-blue-700 mt-2 text-lg">Llena el formulario para crear una nueva receta para tu paciente</p>
         </div>
 
         {/* Main Form */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white/90 rounded-2xl shadow-2xl p-8 border border-blue-100">
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
+            <div className="mb-6 p-4 bg-red-100 border border-red-300 text-red-800 rounded-lg font-semibold shadow">
               {error}
             </div>
           )}
           
           {success && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-md">
+            <div className="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg font-semibold shadow">
               {success}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-10">
             {/* Patient Information */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4 text-gray-800">Patient Information</h2>
-              
+            <div className="bg-gradient-to-r from-blue-100 to-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
+              <h2 className="text-2xl font-bold mb-4 text-blue-800 flex items-center gap-2">
+                <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              Información del paciente
+            </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="patientEmail">
-                    Patient Email *
+                  <label className="block text-sm font-semibold text-blue-700 mb-2" htmlFor="patientEmail">
+                    Correo electrónico del paciente *
                   </label>
                   <input
                     id="patientEmail"
                     type="email"
-                    className="w-full p-3 text-black border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-3 text-blue-900 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white/80 shadow-sm"
                     value={patientEmail}
                     onChange={handlePatientEmailChange}
-                    placeholder="Enter patient's email address"
+                    placeholder="Ingresa el correo del paciente"
                     required
                   />
                   {searchingPatient && (
-                    <p className="text-sm text-gray-500 mt-1">Searching for patient...</p>
+                    <p className="text-sm text-blue-500 mt-1 animate-pulse">Buscando paciente...</p>
                   )}
-                </div>                {/* Patient Data Display */}
+                </div>
+                {/* Patient Data Display */}
                 {patientData && (
-                  <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-                    <p className="text-sm font-medium text-green-800">
-                      ✓ Patient Found: {patientData.name}
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg shadow-sm">
+                    <p className="text-base font-semibold text-green-800 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      Paciente encontrado: {patientData.name}
                     </p>
-                    <p className="text-sm text-green-600">Email: {patientData.email}</p>
+                    <p className="text-sm text-green-700">Correo: {patientData.email}</p>
                     {patientId && patientName && queryPatientEmail && (
                       <p className="mt-1 text-xs text-blue-700">
                         <span className="bg-blue-100 px-2 py-0.5 rounded">
@@ -325,125 +269,130 @@ export default function CreatePrescriptionPage() {
 
             {/* Medications */}
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-800">Medications</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-blue-800 flex items-center gap-2">
+                  <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 014-4h4m0 0V7a4 4 0 00-4-4H7a4 4 0 00-4 4v10a4 4 0 004 4h4" /></svg>
+                  Medicamentos
+                </h2>
                 <button
                   type="button"
                   onClick={handleAddMedication}
-                  className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow flex items-center gap-2"
                 >
-                  + Add Medication
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
+                  Agregar medicamento
                 </button>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-8">
                 {medications.map((medication, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-lg font-medium text-gray-700">
-                        Medication {index + 1}
+                  <div key={index} className="border-2 border-blue-200 rounded-2xl p-6 bg-white/80 shadow-md relative">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-bold text-blue-700 flex items-center gap-2">
+                        <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m7-7v14" /></svg>
+                        Medicamento {index + 1}
                       </h3>
                       {medications.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveMedication(index)}
-                          className="text-red-500 hover:text-red-700 text-xl font-bold"
-                          title="Remove medication"
+                          className="text-red-500 hover:text-white bg-red-100 hover:bg-red-500 text-xl font-bold rounded-full w-8 h-8 flex items-center justify-center shadow transition-colors"
+                          title="Eliminar medicamento"
                         >
                           ×
                         </button>
                       )}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Medication Name *
+                        <label className="block text-sm font-semibold text-blue-700 mb-1">
+                          Nombre del medicamento *
                         </label>
                         <input
                           type="text"
-                          className="w-full p-2 text-black border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 text-blue-900 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white/90 shadow-sm"
                           value={medication.name}
                           onChange={(e) => handleMedicationChange(index, 'name', e.target.value)}
-                          placeholder="e.g., Amoxicillin"
+                          placeholder="Ejemplo: Amoxicilina"
                           required
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Dosage *
+                        <label className="block text-sm font-semibold text-blue-700 mb-1">
+                          Dosis *
                         </label>
                         <input
                           type="text"
-                          className="w-full p-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 border text-blue-900 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white/90 shadow-sm"
                           value={medication.dosage}
                           onChange={(e) => handleMedicationChange(index, 'dosage', e.target.value)}
-                          placeholder="e.g., 500mg"
+                          placeholder="Ejemplo: 500mg"
                           required
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Frequency *
+                        <label className="block text-sm font-semibold text-blue-700 mb-1">
+                          Frecuencia *
                         </label>
                         <select
-                          className="w-full p-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 border text-blue-900 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white/90 shadow-sm"
                           value={medication.frequency}
                           onChange={(e) => handleMedicationChange(index, 'frequency', e.target.value)}
                           required
                         >
-                          <option value="">Select frequency</option>
-                          <option value="Once daily">Once daily</option>
-                          <option value="Twice daily">Twice daily</option>
-                          <option value="Three times daily">Three times daily</option>
-                          <option value="Four times daily">Four times daily</option>
-                          <option value="Every 4 hours">Every 4 hours</option>
-                          <option value="Every 6 hours">Every 6 hours</option>
-                          <option value="Every 8 hours">Every 8 hours</option>
-                          <option value="Every 12 hours">Every 12 hours</option>
-                          <option value="As needed">As needed</option>
-                          <option value="Before meals">Before meals</option>
-                          <option value="After meals">After meals</option>
+                          <option value="">Selecciona la frecuencia</option>
+                          <option value="Una vez al día">Una vez al día</option>
+                          <option value="Dos veces al día">Dos veces al día</option>
+                          <option value="Tres veces al día">Tres veces al día</option>
+                          <option value="Cuatro veces al día">Cuatro veces al día</option>
+                          <option value="Cada 4 horas">Cada 4 horas</option>
+                          <option value="Cada 6 horas">Cada 6 horas</option>
+                          <option value="Cada 8 horas">Cada 8 horas</option>
+                          <option value="Cada 12 horas">Cada 12 horas</option>
+                          <option value="Según necesidad">Según necesidad</option>
+                          <option value="Antes de comidas">Antes de comidas</option>
+                          <option value="Después de comidas">Después de comidas</option>
                         </select>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Duration *
+                        <label className="block text-sm font-semibold text-blue-700 mb-1">
+                          Duración *
                         </label>
                         <select
-                          className="w-full p-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 border text-blue-900 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white/90 shadow-sm"
                           value={medication.duration}
                           onChange={(e) => handleMedicationChange(index, 'duration', e.target.value)}
                           required
                         >
-                          <option value="">Select duration</option>
-                          <option value="3 days">3 days</option>
-                          <option value="5 days">5 days</option>
-                          <option value="7 days">7 days</option>
-                          <option value="10 days">10 days</option>
-                          <option value="14 days">14 days</option>
-                          <option value="21 days">21 days</option>
-                          <option value="30 days">30 days</option>
-                          <option value="60 days">60 days</option>
-                          <option value="90 days">90 days</option>
-                          <option value="Until finished">Until finished</option>
-                          <option value="Ongoing">Ongoing</option>
+                          <option value="">Selecciona la duración</option>
+                          <option value="3 días">3 días</option>
+                          <option value="5 días">5 días</option>
+                          <option value="7 días">7 días</option>
+                          <option value="10 días">10 días</option>
+                          <option value="14 días">14 días</option>
+                          <option value="21 días">21 días</option>
+                          <option value="30 días">30 días</option>
+                          <option value="60 días">60 días</option>
+                          <option value="90 días">90 días</option>
+                          <option value="Hasta terminar">Hasta terminar</option>
+                          <option value="Crónico">Crónico</option>
                         </select>
                       </div>
 
                       <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Special Instructions
+                        <label className="block text-sm font-semibold text-blue-700 mb-1">
+                          Instrucciones especiales
                         </label>
                         <textarea
-                          className="w-full p-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 border text-blue-900 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white/90 shadow-sm"
                           rows="2"
                           value={medication.instructions}
                           onChange={(e) => handleMedicationChange(index, 'instructions', e.target.value)}
-                          placeholder="e.g., Take with food, avoid alcohol, etc."
+                          placeholder="Ejemplo: Tomar con alimentos, evitar alcohol, etc."
                         />
                       </div>
                     </div>
@@ -452,35 +401,18 @@ export default function CreatePrescriptionPage() {
               </div>
             </div>
 
-            {/* Doctor Information */}
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold mb-2 text-blue-800">Doctor Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p><span className="font-medium">Name:</span> {user.name}</p>
-                  <p><span className="font-medium">Email:</span> {user.email}</p>
-                </div>
-                <div>
-                  <p><span className="font-medium">Specialty:</span> {user.specialty || 'General Practice'}</p>
-                  <p><span className="font-medium">Clinic:</span> {user.clinic || 'Not specified'}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Debug User Info */}
-            <UserDebugInfo user={user} />
 
             {/* Submit Button */}
-            <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+            <div className="flex justify-end space-x-4 pt-8 border-t border-blue-200 mt-8">
               <Link
                 href="/prescriptions"
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-100 hover:text-blue-900 transition-colors font-semibold shadow"
               >
-                Cancel
+                Cancelar
               </Link>
               <button
                 type="submit"
-                className="px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+                className="px-8 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-900 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors font-bold shadow flex items-center gap-2"
                 disabled={isLoading || !patientData}
               >
                 {isLoading ? (
@@ -489,10 +421,13 @@ export default function CreatePrescriptionPage() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Creating Prescription...
+                    Creando receta...
                   </span>
                 ) : (
-                  'Create Prescription'
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    Crear receta
+                  </>
                 )}
               </button>
             </div>

@@ -13,7 +13,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex flex-col justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex flex-col justify-center items-center">
       <main className="w-full max-w-xl bg-white/80 rounded-2xl shadow-xl p-8 mt-12 mb-12">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-center mb-6 text-indigo-700 tracking-tight drop-shadow-md">
           Sistema de Recetas Médicas Digitales
@@ -24,32 +24,7 @@ export default function Home() {
               Bienvenido {' '}
               <span className="text-black">{user.name}</span>
             </h2>
-            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-2">
-              {user.role === 'doctor' && (
-                <Link
-                  href="/prescriptions/create"
-                  className="btn-primary min-w-[180px]"
-                >
-                  <span className="inline-block align-middle">Crear Receta</span>
-                </Link>
-              )}
-              {user.role === 'pharmacist' && (
-                <Link
-                  href="/prescriptions/verify"
-                  className="btn-primary min-w-[180px]"
-                >
-                  <span className="inline-block align-middle">
-                    Verificar Receta
-                  </span>
-                </Link>
-              )}
-              <Link
-                href="/prescriptions"
-                className="btn-primary min-w-[180px]"
-              >
-              </Link>
-            </div>
-          </div>
+             </div>
         ) : (
           <div className="text-center">
             <h2 className="text-xl sm:text-2xl mb-8 text-gray-700 font-medium">

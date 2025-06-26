@@ -27,7 +27,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#f5f8ff]">
       <div className="flex">
         <main className="flex-1 p-10">
-          <h1 className="text-2xl font-semibold mb-8 text-black">Bienvenido, {user.name}</h1>
+          <h1 className="text-2xl font-semibold mb-8 text-black">Bienvenido {user.name}</h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             {/* Categorías */}
