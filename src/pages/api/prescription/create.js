@@ -1,7 +1,7 @@
 import Prescription from '../../../models/Prescription';
 import User from '../../../models/User';
 import dbConnect from '../../../lib/database';
-import { signPrescription } from '../../../lib/cryptography';
+import { signPrescription, encryptMedications } from '../../../lib/cryptography';
 import { checkRole } from '../../../lib/roles';
 
 export default async function handler(req, res) {
@@ -52,10 +52,35 @@ export default async function handler(req, res) {
     // Firmar
     const signature = await signPrescription(doctor.privateKey, prescriptionData);
 
+    //Cifrar medicamentos
+
+    console.log('🔐 Cifrando medicamentos:', medications);
+
+    const { encryptedMedications, aesKey, iv, authTag } = await encryptMedications(medications);
+
+    console.log('🔐 Clave AES:', aesKey);
+    console.log('🔐 IV:', iv.toString('hex'));
+    console.log('🔐 Auth Tag:', authTag.toString('hex'));
+
+
     // Guardar receta
     const prescription = new Prescription({
       ...prescriptionData,
       doctorSignature: signature,
+      encryptedMedications,
+      iv: iv.toString('hex'),
+      authTag: authTag.toString('hex'),
+      aesKeys: {
+        doctor: {
+          encryptedKey: aesKey
+        },
+        patient: {
+          encryptedKey: aesKey
+        },
+        pharmacist: {
+          encryptedKey: aesKey
+        }
+      },
       pharmacistId: pharmacist ? pharmacist._id : undefined,
       pharmacy: pharmacy || (pharmacist ? pharmacist.pharmacy : undefined)
     });

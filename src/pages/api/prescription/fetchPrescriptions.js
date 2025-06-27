@@ -31,6 +31,8 @@ export default async function handler(req, res) {
                 .populate('pharmacistId', 'name email pharmacy')
                 .sort({ createdAt: -1 }); // Ordenar por más recientes primero
 
+            
+
             res.status(200).json(prescriptions);
         } catch (error) {
             console.error("Error fetching prescriptions:", error);

@@ -6,6 +6,7 @@ export function usePrescriptions() {
   const [prescriptions, setPrescriptions] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  
   const fetchPrescriptions = async () => {
     setIsLoading(true)
     setError(null)
@@ -41,6 +42,7 @@ export function usePrescriptions() {
       fetchPrescriptions()
     }
   }, [user])
+
   const createPrescription = async (prescriptionData) => {
     setIsLoading(true)
     setError(null)
@@ -103,6 +105,32 @@ export function usePrescriptions() {
       setIsLoading(false)
     }
   }
+  const decryptMedications = async (prescriptionId) => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/prescription/decrypt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prescriptionId,
+          userRole: user?.role
+        })
+      })
+      if (!res.ok) {
+        throw new Error('Failed to decrypt medications')
+      }
+      const data = await res.json()
+      return data.medications
+    } catch (err) {
+      setError(err.message)
+      return null
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return {
     prescriptions,
@@ -111,5 +139,6 @@ export function usePrescriptions() {
     fetchPrescriptions,
     createPrescription,
     verifyPrescription
+    ,decryptMedications
   }
 }

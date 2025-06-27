@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router'
 import { useAuth } from '../../hooks/useAuth'
 import { useEffect, useState } from 'react'
-import { verifySignature } from '../../lib/cryptography'
+import { verifySignature, decryptMedications } from '../../lib/cryptography'
 import Link from 'next/link'
+import { usePrescriptions } from '../../hooks/usePrescriptions'
 
 export default function PrescriptionDetail() {
   const router = useRouter()
@@ -13,6 +14,20 @@ export default function PrescriptionDetail() {
   const [error, setError] = useState('')
   const [doctorSignatureValid, setDoctorSignatureValid] = useState(false)
   const [pharmacySignatureValid, setPharmacySignatureValid] = useState(false)
+
+  const { decryptMedications } = usePrescriptions()
+  const [medications, setMedications] = useState([])
+
+  // // Función para manejar el click y descifrar medicamentos
+  // const handlePrescriptionClick = async (prescription) => {
+  //   // Puedes mostrar un loading si quieres
+  //   const meds = await decryptMedications(prescription._id)
+  //   if (meds) {
+  //     alert('Medicamentos descifrados:\n' + JSON.stringify(meds, null, 2))
+  //   } else {
+  //     alert('No se pudieron descifrar los medicamentos.')
+  //   }
+  // }
 
   useEffect(() => {
     if (!id) return
@@ -65,8 +80,24 @@ export default function PrescriptionDetail() {
         setIsLoading(false)
       }
     }
-    
+
+
     fetchPrescription()
+  }, [id])
+
+  useEffect(() => {
+    if (!id) return
+
+    const fetchMedications = async () => {
+      const meds = await decryptMedications(id)
+      if (meds) {
+        setMedications(meds)
+      } else {
+        setError('No se pudieron descifrar los medicamentos.')
+      }
+    }
+
+    fetchMedications()
   }, [id])
 
   if (isLoading) {
@@ -198,7 +229,7 @@ export default function PrescriptionDetail() {
                 Medicamentos
               </h4>
               <div className="border border-blue-100 rounded-xl divide-y divide-blue-100 bg-white/80 shadow">
-                {prescription.medications.map((med, index) => (
+                {medications.map((med, index) => (
                   <div key={index} className="p-4 grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs text-blue-700 font-semibold">Nombre</p>
