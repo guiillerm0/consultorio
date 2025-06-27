@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function CreatePrescriptionPage() {
   const router = useRouter();
-  const { patientId, patientName, patientEmail: queryPatientEmail } = router.query;
+  const { patientId, patientName, patientEmail: queryPatientEmail, appointmentId } = router.query;
   const { user } = useAuth();
   const [patientEmail, setPatientEmail] = useState('');
   const [patientData, setPatientData] = useState(null);
@@ -186,6 +186,16 @@ export default function CreatePrescriptionPage() {
         throw new Error(errorData.message || 'Failed to create prescription');
       }
       const prescription = await res.json();
+
+      // Si hay appointmentId, marcar la cita como completada
+      if (appointmentId) {
+        await fetch('/api/appoinments/updateStatus', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ appointmentId, status: 'completed' })
+        });
+      }
+
       setSuccess('Prescription created successfully');
       setPatientEmail('');
       setPatientData(null);

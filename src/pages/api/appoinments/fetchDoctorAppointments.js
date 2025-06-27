@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     // Consultar citas
     const appointments = await Appointment.find(query)
       .populate('patientId', 'name email')
-      .populate('doctorId', 'name email speciality')
+      .populate('doctorId', 'name email clinic specialty')
       .sort({ date: -1 }); // Ordenar por fecha, más recientes primero
 
     res.status(200).json(appointments);

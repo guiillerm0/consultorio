@@ -9,6 +9,7 @@ export default function DatesIndex() {
   const [appointments, setAppointments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
+  const [selectedAppointment, setSelectedAppointment] = useState(null)
 
   useEffect(() => {
     if (!user) return
@@ -35,7 +36,8 @@ export default function DatesIndex() {
         }
 
         const appointmentsData = await appointmentsRes.json()
-        setAppointments(appointmentsData)
+        // Si el backend devuelve un array directo:
+        setAppointments(Array.isArray(appointmentsData) ? appointmentsData : appointmentsData.appointments || [])
       } catch (err) {
         setError(err.message)
         console.error('Error:', err)
@@ -140,7 +142,7 @@ export default function DatesIndex() {
               <div className="ml-5">
                 <p className="text-gray-500 text-sm">Citas Completadas</p>
                 <h3 className="font-bold text-xl text-gray-800">
-                  {isLoading ? '-' : appointments.filter(app => new Date(app.date) < new Date()).length}
+                  {isLoading ? '-' : appointments.filter(app => app.status === 'completed').length}
                 </h3>
               </div>
             </div>
@@ -156,7 +158,7 @@ export default function DatesIndex() {
               <div className="ml-5">
                 <p className="text-gray-500 text-sm">Próximas Citas</p>
                 <h3 className="font-bold text-xl text-gray-800">
-                  {isLoading ? '-' : appointments.filter(app => new Date(app.date) >= new Date()).length}
+                  {isLoading ? '-' : appointments.filter(app => new Date(app.date) >= new Date() && app.status === 'scheduled').length}
                 </h3>
               </div>
             </div>
@@ -266,7 +268,13 @@ export default function DatesIndex() {
                             {user.role !== 'doctor' && (
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="text-sm text-gray-900">Dr. {appointment.doctorId?.name || 'No asignado'}</div>
-                                <div className="text-sm text-gray-500">{appointment.doctorId?.speciality || 'Médico general'}</div>
+                                <div className="text-sm text-gray-500">
+                                  {appointment.doctorId?.clinic === 'family'
+                                    ? 'Medicina Familiar'
+                                    : appointment.doctorId?.clinic === 'specialty' && appointment.doctorId?.specialty
+                                      ? appointment.doctorId.specialty
+                                      : 'Médico general'}
+                                </div>
                               </td>
                             )}
                             
@@ -280,9 +288,13 @@ export default function DatesIndex() {
                             )}
                             
                             <td className="px-6 py-4 whitespace-nowrap">
-                              {new Date(appointment.date) < new Date() ? (
+                              {appointment.status === 'completed' ? (
                                 <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                                   Completada
+                                </span>
+                              ) : appointment.status === 'cancelled' ? (
+                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                  Cancelada
                                 </span>
                               ) : (
                                 <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
@@ -292,21 +304,128 @@ export default function DatesIndex() {
                             </td>
                             
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              <button 
-                                className="text-indigo-600 hover:text-indigo-900 mr-3"
-                                onClick={() => {/* Ver detalles */}}
-                              >
-                                Ver detalles
-                              </button>
                               
-                              {new Date(appointment.date) > new Date() && (
+                              {appointment.status === 'completed' ? (
+                                <button
+                                  className="text-blue-600 hover:text-blue-900"
+                                  onClick={() => setSelectedAppointment(appointment)}
+                                >
+                                  Ver detalles
+                                </button>
+                              ) : new Date(appointment.date) > new Date() && appointment.status !== 'cancelled' ? (
                                 <button 
                                   className="text-red-600 hover:text-red-900"
-                                  onClick={() => {/* Cancelar */}}
+                                  onClick={async () => {
+                                    try {
+                                      const res = await fetch('/api/appoinments/cancelAppointment', {
+                                        method: 'PUT',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ appointmentId: appointment._id })
+                                      });
+                                      if (!res.ok) {
+                                        const errorData = await res.json();
+                                        throw new Error(errorData.message || 'Error al cancelar la cita');
+                                      }
+                                      // Actualizar la lista de citas tras cancelar
+                                      setAppointments(prev => prev.map(a => a._id === appointment._id ? { ...a, status: 'cancelled' } : a));
+                                    } catch (err) {
+                                      setError(err.message);
+                                    }
+                                  }}
                                 >
                                   Cancelar
                                 </button>
-                              )}
+                              ) : null}
+      {/* Modal de detalles de cita */}
+      {selectedAppointment ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative border-2 border-blue-200 animate-fade-in">
+            <button
+              className="absolute top-3 right-3 text-gray-400 hover:text-blue-700 text-3xl font-bold focus:outline-none"
+              onClick={() => setSelectedAppointment(null)}
+              aria-label="Cerrar"
+            >
+              &times;
+            </button>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-blue-100 p-3 rounded-full">
+                <svg className="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+              </div>
+              <h3 className="text-2xl font-extrabold text-blue-800">Detalles de la cita</h3>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <span className="w-32 font-semibold text-gray-700">Paciente:</span>
+                <span className="text-gray-900">{selectedAppointment.patientId?.name || 'Sin información'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-32 font-semibold text-gray-700">Doctor:</span>
+                <span className="text-gray-900">{selectedAppointment.doctorId?.name || 'Sin información'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-32 font-semibold text-gray-700">Fecha:</span>
+                <span className="text-gray-900">{new Date(selectedAppointment.date).toLocaleString('es-ES')}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-32 font-semibold text-gray-700">Motivo:</span>
+                <span className="text-gray-900">{selectedAppointment.reason || 'Sin información'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-32 font-semibold text-gray-700">Notas:</span>
+                <span className="text-gray-900">{selectedAppointment.notes || 'Sin información'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-32 font-semibold text-gray-700">Estado:</span>
+                <span className={
+                  selectedAppointment.status === 'completed'
+                    ? 'text-green-700 font-bold'
+                    : selectedAppointment.status === 'cancelled'
+                    ? 'text-red-700 font-bold'
+                    : 'text-gray-700 font-bold'
+                }>
+                  {selectedAppointment.status === 'completed' ? 'Completada' : selectedAppointment.status === 'cancelled' ? 'Cancelada' : 'Programada'}
+                </span>
+              </div>
+              {/* Botón para ver receta asignada (igual que en doctor/index) */}
+              <button
+                className="inline-flex items-center px-4 py-2 border border-blue-500 text-blue-700 font-bold rounded-lg shadow hover:bg-blue-50 transition gap-2 mt-4"
+                onClick={async () => {
+                  try {
+                    // Buscar la receta asociada a la cita (igual que en doctor/index)
+                    const res = await fetch(`/api/prescription/fetchPrescriptions?patientId=${selectedAppointment.patientId?._id}&doctorId=${selectedAppointment.doctorId?._id}`);
+                    if (!res.ok) throw new Error('No se pudo obtener la receta');
+                    const prescriptions = await res.json();
+                    if (!Array.isArray(prescriptions) || prescriptions.length === 0) {
+                      alert('No se encontró receta para esta cita');
+                      return;
+                    }
+                    // Buscar receta por appointmentId o por fecha cercana
+                    const prescription = prescriptions.find((p) => {
+                      // Si tienes appointmentId en Prescription, descomenta la siguiente línea:
+                      // return p.appointmentId === selectedAppointment._id;
+                      // Si no, busca por fecha cercana a la cita (±1 día)
+                      const appDate = new Date(selectedAppointment.date).getTime();
+                      const presDate = new Date(p.issueDate).getTime();
+                      return Math.abs(appDate - presDate) < 1000 * 60 * 60 * 24; // 1 día de diferencia
+                    }) || prescriptions[0];
+                    if (!prescription || !prescription._id) {
+                      alert('No se encontró receta para esta cita');
+                      return;
+                    }
+                    router.push(`/prescriptions/${prescription._id}`);
+                  } catch (err) {
+                    alert('No se pudo redirigir a la receta');
+                  }
+                }}
+                title="Ver receta asignada"
+              >
+                <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 014-4h4m0 0V7a4 4 0 00-4-4H7a4 4 0 00-4 4v10a4 4 0 004 4h4" /></svg>
+                Ver Receta Asignada
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
                             </td>
                           </tr>
                         ))}

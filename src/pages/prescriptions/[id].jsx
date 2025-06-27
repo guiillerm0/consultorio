@@ -183,13 +183,13 @@ export default function PrescriptionDetail() {
                 </p>
                 </div>
                 <div>
-                 <h4 className="text-sm font-bold text-blue-700 flex items-center gap-1 mb-1">
-                  <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                  Responsable asignado
-                </h4>
-                <p className="text-base text-blue-900 font-semibold">
-                  {prescription.pharmacy || prescription.pharmacistId?.name || 'No asignada'}
-                </p>
+                <h4 className="text-sm font-bold text-blue-700 flex items-center gap-1 mb-1">
+                 <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                 Responsable asignado
+               </h4>
+               <p className="text-base text-blue-900 font-semibold">
+                 {prescription.pharmacistId?.name || 'No asignado'}
+               </p>
               </div>
               {prescription.isFilled && (
                 <>
@@ -250,7 +250,7 @@ export default function PrescriptionDetail() {
                     {med.instructions && (
                       <div className="col-span-2">
                         <p className="text-xs text-blue-700 font-semibold">Instrucciones especiales</p>
-                        <p className="text-base text-blue-900 font-normal whitespace-pre-line">{med.instructions}</p>
+                        <p className="text-base text-blue-900 font-bold">{med.instructions}</p>
                       </div>
                     )}
                   </div>

@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     }    // Buscar todas las citas del doctor que no estén completadas
     const appointments = await Appointment.find({ 
       doctorId,
-      status: { $ne: 'completed' } // Excluir citas completadas
+      status: { $nin: ['completed', 'cancelled'] } // Excluir citas completadas y canceladas
     })
       .populate('patientId', 'name email') // Incluir información básica del paciente
       .populate('doctorId', 'name email speciality') // Incluir información básica del doctor
