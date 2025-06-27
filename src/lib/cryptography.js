@@ -12,13 +12,13 @@ const normalizePrescriptionData = (data) => {
     patientId: String(data.patientId),
     doctorId: String(data.doctorId),
     issueDate: new Date(data.issueDate).toISOString(),
-    medications: data.medications.map(med => ({
-      name: String(med.name),
-      dosage: String(med.dosage),
-      frequency: String(med.frequency),
-      duration: String(med.duration),
-      // Añadir otros campos necesarios en orden alfabético
-    })).sort((a, b) => a.name.localeCompare(b.name)) // Ordenar medicamentos
+    // medications: data.medications.map(med => ({
+    //   name: String(med.name),
+    //   dosage: String(med.dosage),
+    //   frequency: String(med.frequency),
+    //   duration: String(med.duration),
+    //   // Añadir otros campos necesarios en orden alfabético
+    // })).sort((a, b) => a.name.localeCompare(b.name)) // Ordenar medicamentos
   };
 };
 

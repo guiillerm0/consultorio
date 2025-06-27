@@ -41,8 +41,8 @@ export default async function handler(req, res) {
     const prescriptionData = {
       patientId: patient._id.toString(),
       doctorId: doctor._id.toString(),
-      issueDate,
-      medications
+      issueDate
+      //medications
     };
 
     // Depuración

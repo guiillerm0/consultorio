@@ -18,17 +18,6 @@ export default function PrescriptionDetail() {
   const { decryptMedications } = usePrescriptions()
   const [medications, setMedications] = useState([])
 
-  // // Función para manejar el click y descifrar medicamentos
-  // const handlePrescriptionClick = async (prescription) => {
-  //   // Puedes mostrar un loading si quieres
-  //   const meds = await decryptMedications(prescription._id)
-  //   if (meds) {
-  //     alert('Medicamentos descifrados:\n' + JSON.stringify(meds, null, 2))
-  //   } else {
-  //     alert('No se pudieron descifrar los medicamentos.')
-  //   }
-  // }
-
   useEffect(() => {
     if (!id) return
 
