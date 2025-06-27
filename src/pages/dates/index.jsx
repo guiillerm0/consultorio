@@ -386,6 +386,42 @@ export default function DatesIndex() {
                   {selectedAppointment.status === 'completed' ? 'Completada' : selectedAppointment.status === 'cancelled' ? 'Cancelada' : 'Programada'}
                 </span>
               </div>
+              {/* Botón para ver receta asignada (igual que en doctor/index) */}
+              <button
+                className="inline-flex items-center px-4 py-2 border border-blue-500 text-blue-700 font-bold rounded-lg shadow hover:bg-blue-50 transition gap-2 mt-4"
+                onClick={async () => {
+                  try {
+                    // Buscar la receta asociada a la cita (igual que en doctor/index)
+                    const res = await fetch(`/api/prescription/fetchPrescriptions?patientId=${selectedAppointment.patientId?._id}&doctorId=${selectedAppointment.doctorId?._id}`);
+                    if (!res.ok) throw new Error('No se pudo obtener la receta');
+                    const prescriptions = await res.json();
+                    if (!Array.isArray(prescriptions) || prescriptions.length === 0) {
+                      alert('No se encontró receta para esta cita');
+                      return;
+                    }
+                    // Buscar receta por appointmentId o por fecha cercana
+                    const prescription = prescriptions.find((p) => {
+                      // Si tienes appointmentId en Prescription, descomenta la siguiente línea:
+                      // return p.appointmentId === selectedAppointment._id;
+                      // Si no, busca por fecha cercana a la cita (±1 día)
+                      const appDate = new Date(selectedAppointment.date).getTime();
+                      const presDate = new Date(p.issueDate).getTime();
+                      return Math.abs(appDate - presDate) < 1000 * 60 * 60 * 24; // 1 día de diferencia
+                    }) || prescriptions[0];
+                    if (!prescription || !prescription._id) {
+                      alert('No se encontró receta para esta cita');
+                      return;
+                    }
+                    router.push(`/prescriptions/${prescription._id}`);
+                  } catch (err) {
+                    alert('No se pudo redirigir a la receta');
+                  }
+                }}
+                title="Ver receta asignada"
+              >
+                <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2a4 4 0 014-4h4m0 0V7a4 4 0 00-4-4H7a4 4 0 00-4 4v10a4 4 0 004 4h4" /></svg>
+                Ver Receta Asignada
+              </button>
             </div>
           </div>
         </div>
