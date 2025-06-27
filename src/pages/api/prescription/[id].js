@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       const prescription = await Prescription.findById(id)
         .populate('patientId', 'name email')
         .populate('doctorId', 'name email publicKey')
-        .populate('pharmacistId', 'name email publicKey')
+        .populate('pharmacistId', 'name email publicKey pharmacy')
 
       console.log('Query result:', prescription ? 'FOUND' : 'NOT FOUND')
       

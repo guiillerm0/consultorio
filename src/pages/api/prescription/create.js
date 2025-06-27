@@ -11,9 +11,8 @@ export default async function handler(req, res) {
 
   try {
     await dbConnect();
-    
-    const { doctorId, patientId, medications } = req.body;
-    
+    const { doctorId, patientId, medications, pharmacistId, pharmacy } = req.body;
+
     // Verificar doctor
     const doctor = await User.findById(doctorId).select('+privateKey');
     if (!doctor || !checkRole(doctor, 'doctor')) {
@@ -24,6 +23,15 @@ export default async function handler(req, res) {
     const patient = await User.findById(patientId);
     if (!patient || !checkRole(patient, 'patient')) {
       return res.status(400).json({ message: 'Invalid patient' });
+    }
+
+    // Si se asigna farmacéutico, verificar que exista y sea farmacéutico
+    let pharmacist = null;
+    if (pharmacistId) {
+      pharmacist = await User.findById(pharmacistId);
+      if (!pharmacist || !checkRole(pharmacist, 'pharmacist')) {
+        return res.status(400).json({ message: 'Invalid pharmacist' });
+      }
     }
 
     // Fecha fija para evitar discrepancias
@@ -47,11 +55,12 @@ export default async function handler(req, res) {
     // Guardar receta
     const prescription = new Prescription({
       ...prescriptionData,
-      doctorSignature: signature
+      doctorSignature: signature,
+      pharmacistId: pharmacist ? pharmacist._id : undefined,
+      pharmacy: pharmacy || (pharmacist ? pharmacist.pharmacy : undefined)
     });
 
     await prescription.save();
-    
     res.status(201).json(prescription);
   } catch (error) {
     console.error('Create prescription error:', error);

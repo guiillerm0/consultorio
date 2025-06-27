@@ -18,7 +18,7 @@ export function usePrescriptions() {
       } else if (user?.role === 'doctor') {
         url += '?doctorId=' + user._id
       } else if (user?.role === 'pharmacist') {
-        url += '?status=pending'
+        url += '?pharmacistId=' + user._id
       }
       
       const res = await fetch(url)

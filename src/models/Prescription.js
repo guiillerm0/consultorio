@@ -8,10 +8,12 @@ const PrescriptionSchema = new mongoose.Schema({
     name: { type: String, required: true },
     dosage: { type: String, required: true },
     frequency: { type: String, required: true },
-    duration: { type: String, required: true }
+    duration: { type: String, required: true },
+    instructions: { type: String }
   }],
   doctorSignature: { type: String, required: true },
   pharmacistId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  pharmacy: { type: String },
   pharmacySignature: { type: String },
   isFilled: { type: Boolean, default: false },
   filledDate: { type: Date }

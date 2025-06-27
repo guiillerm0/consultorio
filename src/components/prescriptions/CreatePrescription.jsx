@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function CreatePrescription() {
@@ -8,6 +8,31 @@ export default function CreatePrescription() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Farmacéuticos y farmacias
+  const [pharmacists, setPharmacists] = useState([]);
+  const [selectedPharmacist, setSelectedPharmacist] = useState('');
+  const [pharmacies, setPharmacies] = useState([]);
+  const [selectedPharmacy, setSelectedPharmacy] = useState('');
+
+  useEffect(() => {
+    // Obtener farmacéuticos al cargar
+    const fetchPharmacists = async () => {
+      try {
+        const res = await fetch('/api/users/fetchPharmacists');
+        if (res.ok) {
+          const data = await res.json();
+          setPharmacists(data);
+          // Extraer farmacias únicas
+          const uniquePharmacies = Array.from(new Set(data.map(ph => ph.pharmacy).filter(Boolean)));
+          setPharmacies(uniquePharmacies);
+        }
+      } catch (err) {
+        // No hacer nada
+      }
+    };
+    fetchPharmacists();
+  }, []);
 
   const handleAddMedication = () => {
     setMedications([...medications, { name: '', dosage: '', frequency: '', duration: '' }]);
@@ -54,7 +79,8 @@ export default function CreatePrescription() {
         body: JSON.stringify({
           doctorId: user._id,
           patientId: patient._id,
-          medications: medications.filter(m => m.name && m.dosage && m.frequency && m.duration)
+          medications: medications.filter(m => m.name && m.dosage && m.frequency && m.duration),
+          pharmacistId: selectedPharmacist || undefined
         })
       });
 
@@ -81,6 +107,50 @@ export default function CreatePrescription() {
       {success && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">{success}</div>}
       
       <form onSubmit={handleSubmit}>
+        {/* Selección de farmacia */}
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="pharmacy">
+            Asignar a farmacia
+          </label>
+          <select
+            id="pharmacy"
+            className="w-full p-2 border rounded"
+            value={selectedPharmacy}
+            onChange={e => {
+              setSelectedPharmacy(e.target.value);
+              setSelectedPharmacist(''); // Limpiar farmacéutico al cambiar farmacia
+            }}
+            required
+          >
+            <option value="">Seleccione una farmacia</option>
+            {pharmacies.map(pharmacy => (
+              <option key={pharmacy} value={pharmacy}>{pharmacy}</option>
+            ))}
+          </select>
+        </div>
+        {/* Selección de farmacéutico filtrado por farmacia */}
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="pharmacist">
+            Asignar a farmacéutico
+          </label>
+          <select
+            id="pharmacist"
+            className="w-full p-2 border rounded"
+            value={selectedPharmacist}
+            onChange={e => setSelectedPharmacist(e.target.value)}
+            required
+            disabled={!selectedPharmacy}
+          >
+            <option value="">Seleccione un farmacéutico</option>
+            {pharmacists
+              .filter(ph => ph.pharmacy === selectedPharmacy)
+              .map(ph => (
+                <option key={ph._id} value={ph._id}>
+                  {ph.name} ({ph.email})
+                </option>
+              ))}
+          </select>
+        </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="patientEmail">
             Patient Email

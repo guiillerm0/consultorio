@@ -6,7 +6,7 @@ export default async function handler(req, res) {
         try {
             await dbConnect();
 
-            const { patientId, doctorId, status } = req.query;
+            const { patientId, doctorId, pharmacistId } = req.query;
             let filter = {};
 
             // Filtrar por paciente (para vista del paciente)
@@ -17,6 +17,11 @@ export default async function handler(req, res) {
             // Filtrar por doctor (para vista del doctor)
             if (doctorId) {
                 filter.doctorId = doctorId;
+            }
+
+            // Filtrar por farmacéutico (para vista del farmacéutico)
+            if (pharmacistId) {
+                filter.pharmacistId = pharmacistId;
             }
 
             // Buscar recetas con población de datos relacionados

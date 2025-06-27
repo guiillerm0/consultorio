@@ -15,7 +15,29 @@ export default function CreatePrescriptionPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [searchingPatient, setSearchingPatient] = useState(false);  // Verificar que el usuario sea un doctor
+  const [searchingPatient, setSearchingPatient] = useState(false);
+  // Farmacias y farmacéuticos
+  const [pharmacies, setPharmacies] = useState([]);
+  const [selectedPharmacy, setSelectedPharmacy] = useState('');
+  const [pharmacists, setPharmacists] = useState([]);
+  const [selectedPharmacist, setSelectedPharmacist] = useState('');
+
+  // Obtener farmacias y farmacéuticos al cargar
+  useEffect(() => {
+    const fetchPharmacists = async () => {
+      try {
+        const res = await fetch('/api/users/fetchPharmacists');
+        if (res.ok) {
+          const data = await res.json();
+          setPharmacists(data);
+          // Extraer farmacias únicas
+          const uniquePharmacies = Array.from(new Set(data.map(ph => ph.pharmacy).filter(Boolean)));
+          setPharmacies(uniquePharmacies);
+        }
+      } catch (err) {}
+    };
+    fetchPharmacists();
+  }, []);
   useEffect(() => {
     if (user && user.role !== 'doctor') {
       router.push('/dashboard');
@@ -123,59 +145,56 @@ export default function CreatePrescriptionPage() {
   // Enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     if (!patientData) {
       setError('Please select a valid patient');
       return;
     }
-
+    if (!selectedPharmacy) {
+      setError('Por favor selecciona una farmacia');
+      return;
+    }
+    if (!selectedPharmacist) {
+      setError('Por favor selecciona un farmacéutico');
+      return;
+    }
     // Validar medicamentos
     const validMedications = medications.filter(med => 
       med.name.trim() && med.dosage.trim() && med.frequency.trim() && med.duration.trim()
     );
-
     if (validMedications.length === 0) {
       setError('Please add at least one complete medication');
       return;
     }
-
     setIsLoading(true);
     setError('');
     setSuccess('');
-
     try {
       const requestBody = {
         doctorId: user._id,
         patientId: patientData._id,
-        medications: validMedications
+        medications: validMedications,
+        pharmacistId: selectedPharmacist,
+        pharmacy: selectedPharmacy
       };
-      
-      console.log('Request body being sent:', requestBody);
-      
       const res = await fetch('/api/prescription/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
       });
-
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || 'Failed to create prescription');
       }
-
       const prescription = await res.json();
       setSuccess('Prescription created successfully');
-      
-      // Reset form
       setPatientEmail('');
       setPatientData(null);
       setMedications([{ name: '', dosage: '', frequency: '', duration: '', instructions: '' }]);
-      
-      // Redirect to prescription detail after 2 seconds
+      setSelectedPharmacy('');
+      setSelectedPharmacist('');
       setTimeout(() => {
         router.push(`/prescriptions/${prescription._id}`);
       }, 2000);
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -223,6 +242,50 @@ export default function CreatePrescriptionPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-10">
+            {/* Selección de farmacia */}
+            <div className="mb-6">
+              <label className="block text-base font-semibold text-blue-700 mb-2" htmlFor="pharmacy">
+                Selecciona la farmacia a asignar *
+              </label>
+              <select
+                id="pharmacy"
+                className="w-full p-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white/80 text-blue-900"
+                value={selectedPharmacy}
+                onChange={e => {
+                  setSelectedPharmacy(e.target.value);
+                  setSelectedPharmacist('');
+                }}
+                required
+              >
+                <option value="">Selecciona una farmacia</option>
+                {pharmacies.map(pharmacy => (
+                  <option key={pharmacy} value={pharmacy}>{pharmacy}</option>
+                ))}
+              </select>
+            </div>
+            {/* Selección de farmacéutico filtrado por farmacia */}
+            <div className="mb-6">
+              <label className="block text-base font-semibold text-blue-700 mb-2" htmlFor="pharmacist">
+                Selecciona el farmacéutico responsable *
+              </label>
+              <select
+                id="pharmacist"
+                className="w-full p-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 bg-white/80 text-blue-900"
+                value={selectedPharmacist}
+                onChange={e => setSelectedPharmacist(e.target.value)}
+                required
+                disabled={!selectedPharmacy}
+              >
+                <option value="">Selecciona un farmacéutico</option>
+                {pharmacists
+                  .filter(ph => ph.pharmacy === selectedPharmacy)
+                  .map(ph => (
+                    <option key={ph._id} value={ph._id}>
+                      {ph.name} ({ph.email})
+                    </option>
+                  ))}
+              </select>
+            </div>
             {/* Patient Information */}
             <div className="bg-gradient-to-r from-blue-100 to-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
               <h2 className="text-2xl font-bold mb-4 text-blue-800 flex items-center gap-2">
